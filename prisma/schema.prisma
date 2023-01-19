@@ -11,13 +11,48 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   name         String
-  email        String   @unique
+  email        String     @unique
   password     String
-  last_session DateTime @default(now())
-  update_at    DateTime @default(now())
-  date_born    DateTime @default(now())
+  last_session DateTime   @default(now())
+  update_at    DateTime   @default(now())
+  date_born    DateTime   @default(now())
+  Playlists    Playlist[] 
 
   @@map("users")
+}
+
+model Song {
+  id           Int            @id @default(autoincrement())
+  name         String
+  artist       String?
+  album        String?
+  year         Int
+  genre        String
+  duration     Int
+  is_public    Boolean        @default(true)
+  playlists    PlaylistSong[]
+
+  @@map("songs")
+}
+
+model Playlist {
+  id            Int           @id @default(autoincrement())
+  name          String
+  user          User          @relation(fields: [user_id], references: [id])
+  user_id       Int
+  songs         PlaylistSong[]
+
+  
+
+  @@map("playlists")
+}
+
+model PlaylistSong {
+  id            Int         @id @default(autoincrement())
+  playlist      Playlist    @relation(fields: [playlistId], references: [id])
+  playlistId    Int
+  song          Song        @relation(fields: [songId], references: [id])
+  songId        Int
 }
