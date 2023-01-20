@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import cors from "cors";
 import * as jwt from "jsonwebtoken";
 
+import { verifyToken } from "./middleware";
+
 import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
@@ -97,7 +99,7 @@ app.get("/api/v1/songs", async (_req: Request, res: Response) => {
 });
 
 //Listar cancion por id
-app.get("/api/v1/songs/:id", async (req: Request, res: Response) => {
+app.get("/api/v1/songs/:id",verifyToken, async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
   const result = await prisma.song.findUnique({
     where: {
