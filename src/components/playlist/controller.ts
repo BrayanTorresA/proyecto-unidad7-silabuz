@@ -71,3 +71,22 @@ export const addSongToPlaylist = async (
     res.status(500).json({ message: error });
   }
 };
+
+export const findUserPlaylists = async (req: Request,res: Response): Promise<void> => {
+  try {
+    const idUser = Number(req.params.idUser);
+    const playlists = await prisma.playlist.findMany({
+      where: {
+        user_id: idUser,
+      },
+      select: {
+        id: true,
+        name: true,
+        songs:true,
+      },
+    });
+    res.json(playlists);
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
